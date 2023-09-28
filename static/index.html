@@ -30,39 +30,40 @@
             </h1>
 
             <form
-                action="fastapi-production-1ea4.up.railway.app/predict"
+                action="http://127.0.0.1:8000/predict"
                 method="post"
+                enctype="multipart/form-data"
                 class="flex flex-col"
             >
-                <label for="Usia" class="mb-2">Usia</label>
+                <label for="age" class="mb-2">Usia</label>
                 <input
                     type="text"
-                    name="Usia"
-                    placeholder="Usia"
+                    name="age"
+                    placeholder="age"
                     required="required"
                     class="p-4 bg-gray-100 rounded-md"
                 />
 
-                <label for="Jenis Kelamin" class="mt-4 mb-2"
+                <label for="sex" class="mt-4 mb-2"
                     >Jenis Kelamin:</label
                 >
                 <select
-                    name="Jenis Kelamin"
-                    id="Jenis Kelamin"
+                    name="sex"
+                    id="sex"
                     class="p-4 bg-gray-100 rounded-md"
                 >
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
+                    <option value="1">Laki-laki</option>
+                    <option value="0">Perempuan</option>
                 </select>
 
-                <label for="Perokok" class="mt-4 mb-2">Perokok:</label>
+                <label for="smoker" class="mt-4 mb-2">Perokok:</label>
                 <select
-                    name="Perokok"
-                    id="Perokok"
+                    name="smoker"
+                    id="smoker"
                     class="p-4 bg-gray-100 rounded-md"
                 >
-                    <option value="Ya">Ya</option>
-                    <option value="Tidak">Tidak</option>
+                    <option value="1">Ya</option>
+                    <option value="0">Tidak</option>
                 </select>
 
                 <button

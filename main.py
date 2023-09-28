@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Form, Depends
 from pydantic import BaseModel
 import pickle
 import json
@@ -27,6 +27,8 @@ class Req(BaseModel):
 async def root():
     return {"message": "Hello World. Welcome to FastAPI!"}
 
+def form_req(age: str = Form(...), sex: str = Form(...), smoker: str = Form(...)):
+    return Req(age=age, sex=sex, smoker=smoker, bmi=20.0, children=0, region=0)
 
 @app.get("/path")
 async def demo_get():
@@ -81,10 +83,9 @@ async def taxonomyList(anatomy: str):
 async def anatomyList():
     jsonStr = json.dumps(anatomyName, ensure_ascii=False)
     return {jsonStr}
-        
-    
+
 @app.post("/predict")
-async def predict(requess: Req):
+async def predict(requess: Req = Depends(form_req)):
     '''
     Predict the insurance cost based on user inputs
     and render the result to the html page
