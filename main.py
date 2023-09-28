@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from fastapi import FastAPI, Form, Depends
+from fastapi import FastAPI, Form, Depends, Request
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import pickle
 import json
 
 app = FastAPI()
 
+templates = Jinja2Templates(directory="templates")  # Menentukan direktori templates
 
 model_file = open('insurance_model.pkl', 'rb')
 model = pickle.load(model_file, encoding='bytes')
@@ -85,7 +87,7 @@ async def anatomyList():
     return {jsonStr}
 
 @app.post("/predict")
-async def predict(requess: Req = Depends(form_req)):
+async def predict(request: Request, requess: Req = Depends(form_req)):
     '''
     Predict the insurance cost based on user inputs
     and render the result to the html page
@@ -116,6 +118,17 @@ async def predict(requess: Req = Depends(form_req)):
     
     prediction = model.predict([data])
     output = round(prediction[0], 2)
-    return {"message": f"Your annual insurance is: {output} USD"}        
+
+    # Merender index.html dengan data hasil prediksi
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "insurance_cost": output,
+            "age": requess.age,
+            "sex": "Laki-laki" if requess.sex == 1 else "Perempuan",
+            "smoker": "Ya" if requess.smoker == 1 else "Tidak"
+        }
+    )
     
 #     #return render_template('index.html', insurance_cost=output, age=age, sex=sex, smoker=smoker)
