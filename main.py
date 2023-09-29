@@ -97,6 +97,19 @@ async def predict(request: Request, requess: Req = Depends(form_req)):
             "insurance_cost": output,
             "age": requess.age,
             "sex": "Laki-laki" if requess.sex == 1 else "Perempuan",
-            "smoker": "Ya" if requess.smoker == 1 else "Tidak"
+            "smoker": "Ya" if requess.smoker == 1 else "Tidak",
+            "bmi": requess.bmi,  # Menambahkan ini
+            "children": requess.children,  # Menambahkan ini
+            "region": get_region_name(requess.region)  # Menambahkan ini
         }
     )
+
+def get_region_name(region_code):
+    region_mapping = {
+        0: "Northeast",
+        1: "Northwest",
+        2: "Southeast",
+        3: "Southwest"
+    }
+    return region_mapping.get(region_code, "Unknown")
+
