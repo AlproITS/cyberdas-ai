@@ -9,13 +9,16 @@ import json
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="templates")  # Menentukan direktori templates
+# Menentukan direktori templates
+templates = Jinja2Templates(directory="templates")
 
 model_file = open('insurance_model.pkl', 'rb')
 model = pickle.load(model_file, encoding='bytes')
 
+
 class Msg(BaseModel):
     msg: str
+
 
 class Req(BaseModel):
     age: int
@@ -25,12 +28,22 @@ class Req(BaseModel):
     children: int
     region: int
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World. Welcome to FastAPI!"}
 
-def form_req(age: str = Form(...), sex: str = Form(...), smoker: str = Form(...)):
-    return Req(age=age, sex=sex, smoker=smoker, bmi=20.0, children=0, region=0)
+
+def form_req(
+        age: str = Form(...),
+        sex: str = Form(...),
+        smoker: str = Form(...),
+        bmi: str = Form(...),
+        children: str = Form(...),
+        region: str = Form(...)
+):
+    return Req(age=age, sex=sex, smoker=smoker, bmi=float(bmi), children=int(children), region=int(region))
+
 
 @app.get("/path")
 async def demo_get():
@@ -46,9 +59,11 @@ async def demo_post(inp: Msg):
 async def demo_get_path_id(path_id: int):
     return {"message": f"This is /path/{path_id} endpoint, use post request to retrieve result"}
 
+
 @app.get("/predict/{path_id}")
 async def predict(path_id: int):
-     return {"message":  f"This is /predict/{path_id} endpoint, use post request to retrieve result"}
+    return {"message":  f"This is /predict/{path_id} endpoint, use post request to retrieve result"}
+
 
 @app.post("/predict")
 async def predict(request: Request, requess: Req = Depends(form_req)):
@@ -69,7 +84,7 @@ async def predict(request: Request, requess: Req = Depends(form_req)):
     data.extend([float(bmi)])
     data.extend([int(children)])
     data.extend([int(smoker)])
-    data.extend([int(region)])  
+    data.extend([int(region)])
 
     prediction = model.predict([data])
     output = round(prediction[0], 2)
