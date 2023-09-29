@@ -34,15 +34,10 @@ async def root():
     return {"message": "Hello World. Welcome to FastAPI!"}
 
 
-def form_req(
-        age: str = Form(...),
-        sex: str = Form(...),
-        smoker: str = Form(...),
-        bmi: str = Form(...),
-        children: str = Form(...),
-        region: str = Form(...)
-):
-    return Req(age=age, sex=sex, smoker=smoker, bmi=float(bmi), children=int(children), region=int(region))
+def form_req(age: str = Form(...), sex: str = Form(...), smoker: str = Form(...),
+             bmi: str = Form(...), children: str = Form(...), region: str = Form(...)):
+    sBmi = bmi.replace(",", ".")
+    return Req(age=int(age), sex=int(sex), smoker=int(smoker), bmi=float(sBmi), children=int(children), region=int(region))
 
 
 @app.get("/path")
